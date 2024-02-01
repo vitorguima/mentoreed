@@ -1,0 +1,34 @@
+django==4.1.7
+# Allows to add environment variables to the project
+django-environ==0.10.0
+djangorestframework==3.14.0
+
+# A Django App that adds Cross-Origin Resource Sharing (CORS) headers to responses. 
+# This allows in-browser requests to your Django application from other origins.
+django-cors-headers==3.14.0
+
+# allows users to filter down a queryset based on a model’s fields
+django-filter==22.1
+
+# provides an improved slug field
+django-autoslug==1.9.8
+
+# provides models and fixtures for country data
+django-countries==7.5.1
+
+# Parsing and storing international phone numbers
+django-phonenumber-field==7.0.2
+phonenumbers==8.13.7
+
+# Automated generation of real swagger/OpenAPI 2.0 schemas from Django Rest Framework code.
+drf-yasg==1.21.5
+
+pillow==9.4.0
+
+# Provides secure password hashing using argon2
+argon2-cffi==21.3.0
+
+# Accurate cross platform timezone calculation
+pytz==2022.7.1
+
+django-taggit==3.1.0

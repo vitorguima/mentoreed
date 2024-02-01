@@ -1,0 +1,9 @@
+-r base.txt
+
+# Python postgres adapter
+psycopg2-binary==2.9.5
+
+# Grants good code style
+flake8==6.0.0
+black==23.1.0
+isort==5.12.0
