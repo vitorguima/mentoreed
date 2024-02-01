@@ -43,7 +43,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "django_countries",
     "phonenumber_field",
-    "dry_yasg",
+    "drf_yasg",
     "corsheaders",
 ]
 
