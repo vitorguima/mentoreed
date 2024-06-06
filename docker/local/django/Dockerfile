@@ -27,6 +27,7 @@ COPY ./requirements .
 
 RUN pip wheel --wheel-dir /usr/src/app/wheels \
     -r ${BUILD_ENVIRONMENT}.txt
+# A wheel is a built package that can be installed quickly without needing to compile any source code. Wheels have a .whl extension.
 
 FROM python as python-run-stage
 ARG BUILD_ENVIRONMENT=local
