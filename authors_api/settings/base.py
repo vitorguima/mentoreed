@@ -45,6 +45,7 @@ THIRD_PARTY_APPS = [
     "phonenumber_field",
     "drf_yasg",
     "corsheaders",
+    "djcelery_email",
 ]
 
 LOCAL_APPS = ["core_apps.profiles", "core_apps.common", "core_apps.users"]
@@ -85,14 +86,6 @@ WSGI_APPLICATION = "authors_api.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": "mydatabase",
-#     }
-# }
-# TO DO: Uncomment the following lines to use PostgreSQL after dockerizing the app
 DATABASES = {"default": env.db("DATABASE_URL")}
 
 
@@ -159,6 +152,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Used by the `django-cors-headers` package
 # Which urls should have the cors headers added to their responses
 CORS_URLS_REGEX = r"âpi/.*$"
+
+CELERY_BROKER_URL = env("CELERY_BROKER")
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_BACKEND_MAX_RETRIES = 10
+CELERY_TASK_SEND_SENT_EVENT = True
+
+if USE_TZ:
+    CELERY_TIMEZONE = TIME_ZONE
 
 LOGGING = {
     "version": 1,
