@@ -1,7 +1,7 @@
 -r base.txt
 
 # Python postgres adapter
-psycopg2-binary==2.9.5
+psycopg2-binary==2.9.3
 
 # Grants good code style
 flake8==6.0.0

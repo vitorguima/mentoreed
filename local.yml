@@ -15,11 +15,15 @@ services:
       # ports: Maps a port on the host machine to a port on the container. This makes the container's service accessible from outside the Docker environment on the specified host port.
       - "8000"
     env_file:
-      - .envs/.local/.django
+      - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     depends_on:
-      - postgres
-      - mailhog
+      postgres:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+      redis:
+        condition: service_started
     command: /start
     networks:
       - authors-api
@@ -35,6 +39,13 @@ services:
       - ./.envs/.local/.postgres
     networks:
       - authors-api
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gardener -d gardening-consultant-live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mailhog:
     platform: linux/amd64
@@ -46,9 +57,10 @@ services:
       - authors-api
 
   redis:
-      image: redis:7-alpine
-      networks:
-          - authors-api
+    platform: linux/amd64
+    image: redis:7-alpine
+    networks:
+      - authors-api
 
   celery_worker:
     build:
@@ -61,9 +73,10 @@ services:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     depends_on:
-      - postgres
-      - redis
-      - mailhog
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - authors-api
 
@@ -80,8 +93,10 @@ services:
     ports:
       - "5555:5555"
     depends_on:
-      - redis
-      - postgres
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - authors-api
 
