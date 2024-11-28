@@ -60,3 +60,6 @@ shell:
 
 bash:
 	docker compose -f local.yml exec api bash
+
+check-deploy:
+	docker compose -f local.yml run --rm api python manage.py check --deploy
