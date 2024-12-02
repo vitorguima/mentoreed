@@ -1,5 +1,6 @@
 POSTGRES_HOST=postgres
 POSTGRES_PORT=5432
-POSTGRES_DB=gardening-consultant-live
+POSTGRES_DB=mentoreed
 POSTGRES_USER=gardener
 POSTGRES_PASSWORD=Gardener123456
+DATABASE_URL=postgres://gardener:Gardener123456@postgres:5432/mentoreed
