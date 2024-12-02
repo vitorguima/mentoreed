@@ -3,8 +3,7 @@ import os
 from celery import Celery
 from django.conf import settings
 
-# TODO: change this in prod
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mentoreed.settings.local")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mentoreed.settings.production")
 
 app = Celery("mentoreed")
 
