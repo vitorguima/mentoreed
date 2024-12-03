@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  api: &api
+  api:
     build:
       context: .
       dockerfile: ./docker/production/django/Dockerfile
@@ -13,10 +13,13 @@ services:
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
-    depends_on:
-      - postgres
-      - redis
-      - es
+    depends_on: &default_depends_on
+      postgres:
+        condition: service_healthy
+      mailhog:
+        condition: service_started
+      redis:
+        condition: service_started
     networks:
       - reverseproxy_nw
 
@@ -31,7 +34,12 @@ services:
     env_file:
       - ./.envs/.production/.postgres
     networks:
-      - reverseproxy_nw
+      - reverseproxy_nw\
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gardener -d gardening-consultant-live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
@@ -39,20 +47,20 @@ services:
       - reverseproxy_nw
 
   celery_worker:
-    <<: *api
     image: mentoreed_celery_worker
     command: /start-celeryworker
     networks:
       - reverseproxy_nw
+    <<: *default_depends_on
 
   flower:
-    <<: *api
     image: mentoreed_flower
     command: /start-flower
     volumes:
       - flower_data:/data
     networks:
       - reverseproxy_nw
+    <<: *default_depends_on
 
 networks:
   reverseproxy_nw:
