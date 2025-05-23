@@ -32,7 +32,7 @@ volume:
 	docker volume inspect src_local_postgres_data
 
 gardener-db:
-	docker compose -f local.yml exec postgres psql --username=gardener --dbname=gardening-consultant-live
+	docker compose -f local.yml exec postgres psql --username=gardener --dbname=mentoreed
 
 flake8:
 	docker compose -f local.yml exec api flake8 .

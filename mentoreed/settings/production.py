@@ -84,3 +84,8 @@ LOGGING = {
         },
     },
 }
+
+MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    *MIDDLEWARE,
+]

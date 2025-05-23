@@ -36,7 +36,7 @@ services:
     networks:
       - reverseproxy_nw\
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gardener -d gardening-consultant-live"]
+      test: ["CMD-SHELL", "pg_isready -U gardener -d mentoreed"]
       interval: 10s
       timeout: 5s
       retries: 5
