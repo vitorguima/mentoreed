@@ -26,7 +26,7 @@ services:
         condition: service_started
     command: /start
     networks:
-      - authors-api
+      - mentoreed-api
 
   postgres:
     build:
@@ -38,7 +38,7 @@ services:
     env_file:
       - ./.envs/.local/.postgres
     networks:
-      - authors-api
+      - mentoreed-api
     ports:
       - "5432:5432"
     healthcheck:
@@ -54,13 +54,13 @@ services:
     ports:
       - "8025:8025"
     networks:
-      - authors-api
+      - mentoreed-api
 
   redis:
     platform: linux/amd64
     image: redis:7-alpine
     networks:
-      - authors-api
+      - mentoreed-api
 
   celery_worker:
     build:
@@ -78,7 +78,7 @@ services:
       redis:
         condition: service_started
     networks:
-      - authors-api
+      - mentoreed-api
 
   flower:
     build:
@@ -98,7 +98,7 @@ services:
       redis:
         condition: service_started
     networks:
-      - authors-api
+      - mentoreed-api
 
   nginx:
     restart: always
@@ -113,10 +113,10 @@ services:
     ports:
       - "8080:80"
     networks:
-      - authors-api
+      - mentoreed-api
 
 networks:
-  authors-api:
+  mentoreed-api:
     driver: bridge
 
 volumes:

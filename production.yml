@@ -1,6 +1,15 @@
 version: "3.9"
 
 services:
+  es:
+    image: elasticsearch:7.17.9
+    environment:
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+    networks:
+      - reverseproxy_nw
+
   api:
     build:
       context: .
@@ -13,13 +22,10 @@ services:
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
-    depends_on: &default_depends_on
-      postgres:
-        condition: service_healthy
-      mailhog:
-        condition: service_started
-      redis:
-        condition: service_started
+    depends_on:
+      - postgres
+      - redis
+      - es
     networks:
       - reverseproxy_nw
 
@@ -34,12 +40,7 @@ services:
     env_file:
       - ./.envs/.production/.postgres
     networks:
-      - reverseproxy_nw\
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U gardener -d mentoreed"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - reverseproxy_nw
 
   redis:
     image: redis:7-alpine
@@ -49,18 +50,35 @@ services:
   celery_worker:
     image: mentoreed_celery_worker
     command: /start-celeryworker
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+    depends_on:
+      - postgres
+      - redis
+      - es
     networks:
       - reverseproxy_nw
-    <<: *default_depends_on
 
   flower:
     image: mentoreed_flower
     command: /start-flower
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
     volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
       - flower_data:/data
+    depends_on:
+      - postgres
+      - redis
+      - es
     networks:
       - reverseproxy_nw
-    <<: *default_depends_on
 
 networks:
   reverseproxy_nw:

@@ -7,10 +7,10 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Authors Haven API",
+        title="Mentoreed API",
         default_version="v1",
-        description="API endpoints for Authors Haven API Course",
-        contact=openapi.Contact(email="api.imperfect@gmail.com"),
+        description="Mentoreed API documentation",
+        contact=openapi.Contact(email="whatever@whatever.com"),
         license=openapi.License(name="MIT License"),
     ),
     public=True,
