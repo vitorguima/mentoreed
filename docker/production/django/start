@@ -7,4 +7,5 @@ set -o nounset
 python /app/manage.py collectstatic --noinput
 python /app/manage.py migrate
 
+# FOWARD PORT for NGINX proxy host
 exec /usr/local/bin/gunicorn mentoreed.wsgi --bind 0.0.0.0:1998 --chdir=/app
