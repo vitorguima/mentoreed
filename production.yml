@@ -46,10 +46,8 @@ services:
       - reverseproxy_nw
 
   celery_worker:
-    build:
-      context: .
-      dockerfile: ./docker/production/django/Dockerfile
-    command: /start-celery
+    image: mentoreed
+    command: /start-celerywork
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
@@ -64,9 +62,7 @@ services:
       - reverseproxy_nw
 
   flower:
-    build:
-      context: .
-      dockerfile: ./docker/production/django/Dockerfile
+    image: mentoreed
     command: /start-flower
     env_file:
       - ./.envs/.production/.django
