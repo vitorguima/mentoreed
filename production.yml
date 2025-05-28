@@ -46,7 +46,7 @@ services:
       - reverseproxy_nw
 
   celery_worker:
-    image: mentoreed_celery_worker
+    image: mentoreed
     command: /start-celeryworker
     env_file:
       - ./.envs/.production/.django
@@ -62,7 +62,7 @@ services:
       - reverseproxy_nw
 
   flower:
-    image: mentoreed_flower
+    image: mentoreed
     command: /start-flower
     env_file:
       - ./.envs/.production/.django
