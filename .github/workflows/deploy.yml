@@ -14,6 +14,7 @@ jobs:
           host: ${{ secrets.DO_HOST }}
           username: root
           key: ${{ secrets.DO_SSH }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           script: |
             if [ ! -d /app/.git ]; then
               rm -rf /app
