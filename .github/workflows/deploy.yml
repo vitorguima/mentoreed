@@ -14,6 +14,7 @@ jobs:
           host: ${{ secrets.DO_HOST }}
           username: root
           key: ${{ secrets.DO_SSH }}
+          environment: "Digital Ocean CI/CD"
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           script: |
             if [ ! -d /app/.git ]; then
