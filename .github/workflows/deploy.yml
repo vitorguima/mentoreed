@@ -18,9 +18,9 @@ jobs:
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           script: |
             if [ ! -d /app/.git ]; then
-              rm -rf /app
-              git clone git@github.com:vitorguima/mentoreed.git /app
-              cd /app/mentoreed
+              mkdir /app
+              cd /app
+              git clone git@github.com:vitorguima/mentoreed.git
             else
               cd /app/mentoreed
               git pull origin main
