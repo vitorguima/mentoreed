@@ -24,7 +24,7 @@ services:
     depends_on:
       - postgres
       - redis
-      - es
+      # - es
     networks:
       - reverseproxy_nw
 
@@ -75,7 +75,7 @@ services:
     depends_on:
       - postgres
       - redis
-      - es
+      # - es
     networks:
       - reverseproxy_nw
 
