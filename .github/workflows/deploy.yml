@@ -7,6 +7,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: "Digital Ocean CI/CD"
     steps:
       - name: Deploy to DO Droplet via SSH
         uses: appleboy/ssh-action@v0.1.7
@@ -14,7 +15,6 @@ jobs:
           host: ${{ secrets.DO_HOST }}
           username: root
           key: ${{ secrets.DO_SSH }}
-          environment: "Digital Ocean CI/CD"
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           script: |
             if [ ! -d /app/.git ]; then
