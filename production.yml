@@ -48,7 +48,7 @@ services:
 
   celery_worker:
     image: mentoreed
-    command: /start-celerywork
+    command: /start-celeryworker
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
