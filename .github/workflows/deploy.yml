@@ -27,8 +27,8 @@ jobs:
               git pull origin main
             fi
 
-            docker compose -f production.yml up -d --build --remove-orphans
-            docker compose -f production.yml exec -T api python manage.py migrate --noinput
-            docker compose -f production.yml exec -T api python manage.py collectstatic --noinput
-            docker compose -f production.yml exec -T api python manage.py showmigrations
+            docker compose -p mentoreed -f production.yml up -d --build --remove-orphans
+            docker compose -p mentoreed -f production.yml exec -T api python manage.py migrate --noinput
+            docker compose -p mentoreed -f production.yml exec -T api python manage.py collectstatic --noinput
+            docker compose -p mentoreed -f production.yml exec -T api python manage.py showmigrations
 
