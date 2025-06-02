@@ -17,10 +17,11 @@ jobs:
           key: ${{ secrets.DO_SSH }}
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
           script: |
+            set -e
+
             if [ ! -d /app/.git ]; then
-              mkdir /app
-              cd /app
-              git clone git@github.com:vitorguima/mentoreed.git
+              git clone https://github.com/vitorguima/mentoreed.git /app
+              cd /app/mentoreed
             else
               cd /app/mentoreed
               git pull origin main
@@ -28,4 +29,6 @@ jobs:
 
             docker compose -f production.yml up -d --build --remove-orphans
             docker compose -f production.yml exec -T api python manage.py migrate --noinput
-            docker compose -f production
+            docker compose -f production.yml exec -T api python manage.py collectstatic --noinput
+            docker compose -f production.yml exec -T api python manage.py showmigrations
+
