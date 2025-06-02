@@ -16,16 +16,19 @@ jobs:
           username: root
           key: ${{ secrets.DO_SSH }}
           passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
-          script: |
-            if [ ! -d /app/.git ]; then
-              mkdir /app
-              cd /app
-              git clone git@github.com:vitorguima/mentoreed.git
-            else
-              cd /app/mentoreed
-              git pull origin main
-            fi
+        script: |
+          set -e
 
-            docker compose -f production.yml up -d --build --remove-orphans
-            docker compose -f production.yml exec -T api python manage.py migrate --noinput
-            docker compose -f production
+          if [ ! -d /app/.git ]; then
+            git clone https://github.com/vitorguima/mentoreed.git /app
+            cd /app/mentoreed
+          else
+            cd /app/mentoreed
+            git pull origin main
+          fi
+
+          docker compose -f production.yml up -d --build --remove-orphans
+          docker compose -f production.yml exec -T api python manage.py migrate --noinput
+          docker compose -f production.yml exec -T api python manage.py collectstatic --noinput
+          docker compose -f production.yml exec -T api python manage.py showmigrations
+
