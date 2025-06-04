@@ -4,7 +4,8 @@ from .base import env
 # SECURITY WARNING: keep the secret key used in production secret!
 # generated using python -c "import secrets; print(secrets.token_urlsafe(38))"
 SECRET_KEY = env(
-    "DJANGO_SECRET_KEY", default="JkNRnzZ8z1yBCw8jFkBpQNHDo0v9qDeZAaouOvL2uV2AuWm8y8A",
+    "DJANGO_SECRET_KEY",
+    default="JkNRnzZ8z1yBCw8jFkBpQNHDo0v9qDeZAaouOvL2uV2AuWm8y8A",
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -18,4 +19,3 @@ EMAIL_PORT = env("EMAIL_PORT")
 DEFAULT_FROM_EMAIL = "email@email.com"
 DOMAIN = env("DOMAIN")
 SITE_NAME = "Mentoreed"
-
