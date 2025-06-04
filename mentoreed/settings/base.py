@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+
 import environ
 
 env = environ.Env()
@@ -43,7 +44,7 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # Use it if your single Django installation powers more than one site and you need to differentiate between those sites in some way.
+    # powers more than one site and you need to differentiate between those sites in some way.
     # https://docs.djangoproject.com/en/5.0/ref/contrib/sites/
     "django.contrib.sites",
 ]

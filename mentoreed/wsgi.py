@@ -37,6 +37,6 @@ Django:
 The actual web application framework that processes the requests.
 Handles the business logic, interacts with the database, and generates dynamic HTML or JSON responses.
 """
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mentoreed.settings.production')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mentoreed.settings.production")
 
 application = get_wsgi_application()

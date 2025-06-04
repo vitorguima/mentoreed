@@ -1,9 +1,5 @@
 import subprocess
 import sys
-import pytest
-from django.core.management import call_command
-from django.db import connections
-from django.db.migrations.executor import MigrationExecutor
 
 import pytest
 
