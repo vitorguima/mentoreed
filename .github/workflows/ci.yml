@@ -1,4 +1,4 @@
-name: Pull Request CI (Docker Compose)
+name: Pull Request Checks
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx (recommended for latest Docker Compose)
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker Compose services
