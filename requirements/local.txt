@@ -16,4 +16,7 @@ pytest-cov==6.1.1
 pytest-django==4.11.1
 
 # test factories
-factory-boy==3.2.1
+factory-boy==3.3.3
+
+# Nice management commands for Django
+django-extensions==4.1
