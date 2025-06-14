@@ -30,7 +30,6 @@ APP_DIR = ROOT_DIR / "core_apps"
 DEBUG = env.bool("DJANGO_DEBUG", False)
 
 # Application definition
-
 ADMIN_APPS = [
     "unfold",  # before django.contrib.admin
     "unfold.contrib.filters",  # optional, if special filters are needed
@@ -55,10 +54,14 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "rest_framework",
-    "rest_framework.authtoken",
+    # Authentication and authorization for Django REST Framework
     "rest_framework_simplejwt.token_blacklist",
+    "rest_framework.authtoken",
+    # Registration
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
     "django_extensions",
-    "dj_rest_auth",
     "django_filters",
     "django_countries",
     "phonenumber_field",
@@ -69,6 +72,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "core_apps.users",
+    "core_apps.jwt",
 ]
 
 INSTALLED_APPS = ADMIN_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -82,6 +86,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "mentoreed.urls"
@@ -137,36 +142,58 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    ),
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "dj_rest_auth.jwt_auth.JWTCookieAuthentication",
-        # "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": {
+        "core_apps.jwt.jwt_auth.JWTCookieAuthentication",
+        # "rest_framework_simp
+        # lejwt.authentication.JWTAuthentication",
+    },
+    "DEFAULT_THROTTLE_RATES": {
+        "register": "5/minute",
+    },
 }
 
-# rest_framework_simplejwt settings
+
+# Authentication settings
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "SIGNING_KEY": env("JWT_SIGNING_KEY"),
+    "JWT_AUTH_HTTPONLY": True,
+    "JWT_AUTH_RETURN_EXPIRATION": False,
 }
+USE_JWT = True
+LOGIN_SERIALIZER = "core_apps.jwt.serializers.LoginSerializer"
+JWT_SERIALIZER = "core_apps.jwt.serializers.JWTSerializer"
+JWT_SERIALIZER_WITH_EXPIRATION = (
+    "core_apps.jwt.serializers.JWTSerializerWithExpiration",
+)
+JWT_TOKEN_CLAIMS_SERIALIZER = (
+    "rest_framework_simplejwt.serializers.TokenObtainPairSerializer"
+)
+TOKEN_MODEL = "rest_framework.authtoken.models.Token"
+SESSION_LOGIN = True
+USER_DETAILS_SERIALIZER = "core_apps.users.serializers.UserDetailsSerializer"
 
-# dj-rest-auth settings
-REST_AUTH = {
-    "USE_JWT": True,
-    "JWT_AUTH_COOKIE": "token",
-}
+# Registration settings
+REGISTER_SERIALIZER = "core_apps.jwt.serializers.RegisterSerializer"
+REGISTER_PERMISSION_CLASSES = ("rest_framework.permissions.AllowAny",)
+# Allauth settings
+# ref: https://docs.allauth.org/en/dev/account/configuration.html#configuration
+ACCOUNT_USERNAME_MIN_LENGTH = 6
+ACCOUNT_SIGNUP_FIELDS = ["email", "username*", "password1*", "password2*"]
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = "none"
+
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    "core_apps.users.permissions.UsersPermissionsBackend"
+    "core_apps.users.permissions.UsersPermissionsBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "UTC"
@@ -184,7 +211,6 @@ ADMIN_URL = "admin/"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
 STATIC_URL = "/staticfiles/"
 STATIC_ROOT = str(ROOT_DIR / "staticfiles")
 
@@ -193,7 +219,6 @@ MEDIA_ROOT = str(ROOT_DIR / "mediafiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Used by the `django-cors-headers` package

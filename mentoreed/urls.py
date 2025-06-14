@@ -7,6 +7,8 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework import routers
 
+from core_apps.jwt.urls import urlpatterns as jwt_urls
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Mentoreed API",
@@ -25,6 +27,8 @@ router.register(r'api/v1/users', UserViewSet, basename='user')
 urlpatterns = [
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0)),
     path(settings.ADMIN_URL, admin.site.urls),
-    path('api/v1/auth/', include('dj_rest_auth.urls')),
     path('', include(router.urls)),
+    path('api/v1/auth/', include('core_apps.jwt.urls')),
 ]
+
+urlpatterns += jwt_urls
