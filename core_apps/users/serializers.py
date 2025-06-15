@@ -5,30 +5,6 @@ from rest_framework import serializers
 UserModel = get_user_model()
 
 
-class UserSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150, required=True)
-    email = serializers.EmailField(required=True)
-    first_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
-    last_name = serializers.CharField(max_length=150, required=False, allow_blank=True)
-
-    def create(self, validated_data):
-        return UserModel.objects.create_user(**validated_data)
-
-    def update(self, instance, validated_data):
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-
-    def validate_username(self, value):
-        if UserModel.objects.filter(username=value).exists():
-            raise serializers.ValidationError("Username already exists.")
-        return value
-
-    def validate_email(self, value):
-        if UserModel.objects.filter(email=value).exists():
-            raise serializers.ValidationError("Email already exists.")
-        return value
-
-
 class UserDetailsSerializer(serializers.ModelSerializer):
     """
     User model w/o password
