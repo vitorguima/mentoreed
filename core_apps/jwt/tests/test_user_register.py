@@ -1,11 +1,10 @@
 import pytest
 from allauth.socialaccount.models import EmailAddress
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 
 from core_apps.jwt.tests.factories import EmailAddressFactory
 from core_apps.users.tests.factories import UserFactory
-
-from django.test import override_settings
 
 User = get_user_model()
 
