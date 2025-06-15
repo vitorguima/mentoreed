@@ -1,19 +1,15 @@
-from django.urls import path, re_path
-from django.views.generic import TemplateView
+from django.urls import path
 
 from .views import RegisterView
 
-
 urlpatterns = [
-    path('register', RegisterView.as_view(), name='rest_register'),
+    path("register", RegisterView.as_view(), name="rest_register"),
     # re_path(r'verify-email/?$', VerifyEmailView.as_view(), name='rest_verify_email'),
     # re_path(r'resend-email/?$', ResendEmailVerificationView.as_view(), name="rest_resend_email"),
-
     # This url is used by django-allauth and empty TemplateView is
     # defined just to allow reverse() call inside app, for example when email
     # with verification link is being sent, then it's required to render email
     # content.
-
     # account_confirm_email - You should override this view to handle it in
     # your API client somehow and then, send post to /verify-email/ endpoint
     # with proper key.

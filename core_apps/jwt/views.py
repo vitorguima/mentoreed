@@ -1,3 +1,5 @@
+from allauth.account import app_settings as allauth_account_settings
+from allauth.account.utils import complete_signup
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth import login as django_login
@@ -5,21 +7,22 @@ from django.contrib.auth import logout as django_logout
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.decorators import method_decorator
+from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.debug import sensitive_post_parameters
 from rest_framework import status
-from rest_framework.generics import GenericAPIView, RetrieveUpdateAPIView, CreateAPIView
+from rest_framework.generics import (
+    CreateAPIView,
+    GenericAPIView,
+    RetrieveUpdateAPIView,
+)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.throttling import ScopedRateThrottle
-from allauth.account import app_settings as allauth_account_settings
-from allauth.account.utils import complete_signup
-from django.utils.module_loading import import_string
+from rest_framework.views import APIView
 
 from .models import TokenModel
 from .utils import jwt_encode
-
 
 sensitive_post_parameters_m = method_decorator(
     sensitive_post_parameters(
@@ -68,9 +71,7 @@ class RegisterView(CreateAPIView):
                 "access": self.access_token,
                 "refresh": self.refresh_token,
             }
-            return JWTSerializer(
-                data, context=self.get_serializer_context()
-            ).data
+            return JWTSerializer(data, context=self.get_serializer_context()).data
         # elif self.token_model:
         #     return settings.TOKEN_SERIALIZER(
         #         user.auth_token, context=self.get_serializer_context()
@@ -146,7 +147,6 @@ class LoginView(GenericAPIView):
 
     def get_response_serializer(self):
         if settings.USE_JWT:
-
             if settings.JWT_AUTH_RETURN_EXPIRATION:
                 response_serializer = settings.JWT_SERIALIZER_WITH_EXPIRATION
             else:
@@ -158,7 +158,6 @@ class LoginView(GenericAPIView):
 
     def login(self):
         self.user = self.serializer.validated_data["user"]
-        token_model = TokenModel
 
         if settings.USE_JWT:
             self.access_token, self.refresh_token = jwt_encode(self.user)
@@ -170,7 +169,9 @@ class LoginView(GenericAPIView):
         serializer_class = self.get_response_serializer()
 
         if settings.USE_JWT:
-            from rest_framework_simplejwt.settings import settings as jwt_settings
+            from rest_framework_simplejwt.settings import (
+                settings as jwt_settings,
+            )
 
             access_token_expiration = (
                 timezone.now() + jwt_settings.ACCESS_TOKEN_LIFETIME

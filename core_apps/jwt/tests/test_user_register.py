@@ -1,8 +1,9 @@
-from core_apps.users.tests.factories import UserFactory
 import pytest
-from rest_framework.test import APITestCase
+from allauth.socialaccount.models import EmailAddress
 from django.contrib.auth import get_user_model
-from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
+
+from core_apps.jwt.tests.factories import EmailAddressFactory
+from core_apps.users.tests.factories import UserFactory
 
 User = get_user_model()
 
@@ -27,12 +28,19 @@ def test_user_can_register(client):
         },
     )
 
+    import pdb
+
+    pdb.set_trace()
+
     content = response.json()
 
     assert response.status_code == 201
     assert content["user"]["username"] == username
     assert content["user"]["email"] == email
     assert User.objects.filter(username=username, email=email).exists()
+    assert EmailAddress.objects.filter(
+        user__username=username, email=email, verified=True
+    ).exists()
 
 
 @pytest.mark.django_db
@@ -40,7 +48,7 @@ def test_user_registration_with_existing_username(client):
     """
     Test that a user cannot register with an existing username.
     """
-    
+
     username = "testuser"
     email = "test@gmail.com"
     UserFactory.create(username=username, email=email)
@@ -49,8 +57,9 @@ def test_user_registration_with_existing_username(client):
         {
             "username": username,
             "email": email,
-        })
-    
+        },
+    )
+
     content = response.json()
     assert response.status_code == 400
     assert content["username"] == ["A user with that username already exists."]
@@ -61,10 +70,13 @@ def test_user_registration_with_existing_email(client):
     """
     Test that a user cannot register with an existing email.
     """
-    
+
     username = "testuser"
     email = "existing@gmail.com"
-    UserFactory.create(username=username, email=email)
+    user = UserFactory.create(username=username, email=email)
+    # EmailAdress instance is created automatically when user is created.
+    # TO DO: email verification needs to be implemented yet
+    EmailAddressFactory.create(user=user, verified=True, email=email)
     response = client.post(
         "/api/v1/auth/register",
         {
@@ -76,7 +88,9 @@ def test_user_registration_with_existing_email(client):
     )
     content = response.json()
     assert response.status_code == 400
-    assert content["email"] == ["A user with that email already exists."]
+    assert content["email"] == [
+        "A user is already registered with this e-mail address."
+    ]
 
 
 @pytest.mark.django_db
@@ -84,7 +98,7 @@ def test_user_registration_with_invalid_email(client):
     """
     Test that a user cannot register with an invalid email.
     """
-    
+
     response = client.post(
         "/api/v1/auth/register",
         {
@@ -94,7 +108,7 @@ def test_user_registration_with_invalid_email(client):
             "password2": "testpassword",
         },
     )
-    
+
     content = response.json()
     assert response.status_code == 400
     assert content["email"] == ["Enter a valid email address."]
@@ -105,7 +119,7 @@ def test_user_registration_with_mismatched_passwords(client):
     """
     Test that a user cannot register with mismatched passwords.
     """
-    
+
     response = client.post(
         "/api/v1/auth/register",
         {

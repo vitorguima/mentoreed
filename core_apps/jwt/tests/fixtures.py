@@ -1,5 +1,6 @@
 import pytest
 from rest_framework.test import APIClient as BaseAPIClient
+
 from core_apps.users.tests.factories import UserFactory
 
 
@@ -16,6 +17,7 @@ def client():
     This can be used for tests that do not require authentication.
     """
     return ApiClient()
+
 
 @pytest.fixture
 def authenticated_client(client):

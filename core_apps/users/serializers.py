@@ -1,7 +1,6 @@
-from rest_framework import serializers
-from django.contrib.auth import get_user_model
 from django.conf import settings
-
+from django.contrib.auth import get_user_model
+from rest_framework import serializers
 
 UserModel = get_user_model()
 
@@ -46,7 +45,6 @@ class UserDetailsSerializer(serializers.ModelSerializer):
 
         username = get_adapter().clean_username(username)
         return username
-
 
     class Meta:
         extra_fields = []

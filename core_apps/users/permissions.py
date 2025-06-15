@@ -3,6 +3,7 @@ from django.contrib.auth.backends import BaseBackend
 
 User = get_user_model()
 
+
 class UsersPermissionsBackend(BaseBackend):
     """
     Custom authentication backend to handle user permissions.
@@ -14,7 +15,8 @@ class UsersPermissionsBackend(BaseBackend):
         """
         if not isinstance(user_obj, User):
             return False
-        
+
         if perm == f"{User._meta.app_label}.update_user":
-            return user_obj.is_authenticated and user_obj == obj or user_obj.is_superuser
-        
+            return (
+                user_obj.is_authenticated and user_obj == obj or user_obj.is_superuser
+            )

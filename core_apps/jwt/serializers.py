@@ -1,22 +1,19 @@
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
-from rest_framework import status
-from rest_framework import exceptions, serializers
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.utils import timezone
+from django.utils.module_loading import import_string
+from django.utils.translation import gettext_lazy as _
+from rest_framework import exceptions, serializers, status
+from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.settings import settings as jwt_settings
-from rest_framework_simplejwt.exceptions import InvalidToken
-from django.utils.module_loading import import_string
-
-from django.conf import settings
 
 try:
     from allauth.account import app_settings as allauth_account_settings
     from allauth.account.adapter import get_adapter
     from allauth.account.utils import setup_user_email
-    from allauth.socialaccount.helpers import complete_social_login
-    from allauth.socialaccount.models import EmailAddress, SocialAccount
-    from allauth.socialaccount.providers.base import AuthProcess
+    from allauth.socialaccount.models import EmailAddress
     from allauth.utils import get_username_max_length
 except ImportError:
     raise ImportError("allauth needs to be added to INSTALLED_APPS.")
@@ -259,7 +256,9 @@ class RegisterSerializer(serializers.Serializer):
         min_length=allauth_account_settings.USERNAME_MIN_LENGTH,
         required=allauth_account_settings.SIGNUP_FIELDS["username"]["required"],
     )
-    email = serializers.EmailField(required=allauth_account_settings.SIGNUP_FIELDS["email"]["required"])
+    email = serializers.EmailField(
+        required=allauth_account_settings.SIGNUP_FIELDS["email"]["required"]
+    )
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
@@ -269,7 +268,9 @@ class RegisterSerializer(serializers.Serializer):
 
     def validate_email(self, email):
         email = get_adapter().clean_email(email)
-        import pdb; pdb.set_trace()
+        import pdb
+
+        pdb.set_trace()
         if allauth_account_settings.UNIQUE_EMAIL:
             if email and EmailAddress.objects.is_verified(email):
                 raise serializers.ValidationError(

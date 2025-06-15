@@ -10,13 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-from django.conf import settings
-
+from datetime import timedelta
 from pathlib import Path
 
 import environ
-
-from datetime import timedelta
 
 env = environ.Env()
 

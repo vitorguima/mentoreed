@@ -1,5 +1,5 @@
-from django.utils.functional import lazy
 from django.conf import settings
+from django.utils.functional import lazy
 from django.utils.module_loading import import_string
 
 
