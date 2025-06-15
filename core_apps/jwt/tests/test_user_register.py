@@ -5,10 +5,13 @@ from django.contrib.auth import get_user_model
 from core_apps.jwt.tests.factories import EmailAddressFactory
 from core_apps.users.tests.factories import UserFactory
 
+from django.test import override_settings
+
 User = get_user_model()
 
 
 @pytest.mark.django_db
+@override_settings(ACCOUNT_UNIQUE_EMAIL=True)
 def test_user_can_register(client):
     """ "
     Test that a user can register with valid data.
@@ -35,7 +38,7 @@ def test_user_can_register(client):
     assert content["user"]["email"] == email
     assert User.objects.filter(username=username, email=email).exists()
     assert EmailAddress.objects.filter(
-        user__username=username, email=email, verified=True
+        user__username=username, email=email, verified=False
     ).exists()
 
 

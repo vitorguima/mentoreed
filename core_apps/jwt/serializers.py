@@ -268,7 +268,6 @@ class RegisterSerializer(serializers.Serializer):
 
     def validate_email(self, email):
         email = get_adapter().clean_email(email)
-        import pdb
 
         if allauth_account_settings.UNIQUE_EMAIL:
             if email and EmailAddress.objects.is_verified(email):
