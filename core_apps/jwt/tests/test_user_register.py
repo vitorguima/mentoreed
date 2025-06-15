@@ -28,10 +28,6 @@ def test_user_can_register(client):
         },
     )
 
-    import pdb
-
-    pdb.set_trace()
-
     content = response.json()
 
     assert response.status_code == 201
