@@ -43,3 +43,6 @@ django-unfold==0.59.0
 # JWT authentication for Django Rest Framework
 djangorestframework-simplejwt==5.5.0
 django-allauth[with_social]==65.9.0
+
+# Nice management commands for Django
+django-extensions==4.1
