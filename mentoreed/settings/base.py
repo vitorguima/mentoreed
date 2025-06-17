@@ -210,6 +210,7 @@ ADMIN_URL = "admin/"
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 STATIC_URL = "/staticfiles/"
 STATIC_ROOT = str(ROOT_DIR / "staticfiles")
+STATICFILES_DIRS = [ROOT_DIR / "static"]
 
 MEDIA_URL = "/mediafiles/"
 MEDIA_ROOT = str(ROOT_DIR / "mediafiles")

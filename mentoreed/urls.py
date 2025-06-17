@@ -1,9 +1,13 @@
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
+from core_apps.users.views import anvisa_view
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from django.views.static import serve as static_serve
+from django.urls import re_path
+from django.conf.urls.static import static
 
 from core_apps.jwt.urls import urlpatterns as jwt_urls
 
@@ -26,3 +30,16 @@ urlpatterns = [
 ]
 
 urlpatterns += jwt_urls
+
+urlpatterns += [
+    re_path(r"^anvisa/$", static_serve, {
+        "path": "pdfs/anvisa.pdf",
+        "document_root": settings.MEDIA_ROOT,
+    }),
+]
+
+urlpatterns += [
+    path("anvisas/", anvisa_view, name="anvisa"),
+]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
